@@ -1,9 +1,7 @@
 package VehicleComponents;
 
-import java.awt.Graphics;
 
-public interface VehicleComponent {
-    void draw(Graphics g); //pentru desenarea componentei
+public interface VehicleComponent  {
     String getDescription(); //pentru descriere
 }
 
@@ -13,4 +11,5 @@ public interface VehicleComponent {
 
 //observable in java for waiting the api call
 //intellij swing gui designer
+
 
