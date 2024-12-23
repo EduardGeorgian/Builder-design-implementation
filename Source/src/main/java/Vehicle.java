@@ -14,11 +14,15 @@ public class Vehicle {
     }
 
     public String getDescription() {
-        StringBuilder description = new StringBuilder("Vehicle name: "+name+"\n"+"Vehicle type: "+vehicleType+"\n");
+        StringBuilder description = new StringBuilder("Create a full-view image of a "+ vehicleType+ " that has these configuration:\n");
         for (VehicleComponent component : components) {
             description.append(" - ").append(component.getDescription()).append("\n");
         }
         return description.toString();
+    }
+
+    String getVehicleID(){
+        return this.name;
     }
 
     public static class Builder {

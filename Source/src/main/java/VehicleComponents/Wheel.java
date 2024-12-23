@@ -11,7 +11,7 @@ public class Wheel implements VehicleComponent {
     }
     @Override
     public String getDescription() {
-        return "Wheel: size= "+size+ ", type= "+type;
+        return "Wheels: ( size: " + size + " model: "+type+")";
     }
     public static class Builder {
         private int size;

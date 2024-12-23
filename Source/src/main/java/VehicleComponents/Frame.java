@@ -18,13 +18,13 @@ public class Frame implements VehicleComponent {
     @Override
     public String getDescription() {
         return
-                "Frame type:" +
+                " Chassis: " +
                 frameType +
-                " Model name:"+
+                " ,Inspired from: "+
                 modelName+
-                " Frame color:"+
+                " ,Color: "+
                 frameColor+
-                " Door number:"+
+                " ,Door number:"+
                 doorNumber;
     }
 
