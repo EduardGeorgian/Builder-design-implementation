@@ -21,6 +21,7 @@ public class ProdiaClient {
    static Gson gson = new Gson();
 
     public static BufferedImage generateVehicleImage(String vehicleDescription, String outputPath, String vehicleID) {
+        System.out.println(vehicleDescription);
         try {
             GenerateCallRequest callRequest=new GenerateCallRequest(vehicleDescription);
             HttpClient client = HttpClient.newHttpClient();
