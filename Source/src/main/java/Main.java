@@ -14,7 +14,7 @@ public class Main {
         String outputPath = "generated_vehicle_image.png";
         ProdiaClient ProdiaIntegration = new ProdiaClient();
         //BufferedImage vehicleImage = ProdiaClient.generateVehicleImage(vehicle.getDescription(), outputPath,vehicle.getVehicleID());
-        BufferedImage vehicleImage = ProdiaClient.generateVehicleImage("Create a single image  of a vehicle, no " +
+        BufferedImage vehicleImage = ProdiaIntegration.generateVehicleImage("Create a single image  of a vehicle, no " +
                         "variations, no collage, full-view that respects these " +
                 "exact requirements: Type: Car, Cabrio, inspired from Mercedes, Chassis color black, with 4 doors",outputPath,
                 "test-vehicle");

@@ -32,6 +32,7 @@ public class ProdiaClient {
                     .header("X-Prodia-Key", "39dc32a2-6991-41b4-95d2-a95563f8ef38")
                     .method("POST", HttpRequest.BodyPublishers.ofString(gson.toJson(callRequest)))
                     .build();
+            System.out.println("Request created");
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println(response.body());
 

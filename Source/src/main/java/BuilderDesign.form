@@ -12,9 +12,13 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="66742" class="javax.swing.JLabel">
+      <component id="66742" class="javax.swing.JLabel" binding="titleLabel">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+            <minimum-size width="400" height="-1"/>
+            <preferred-size width="400" height="-1"/>
+            <maximum-size width="400" height="-1"/>
+          </grid>
         </constraints>
         <properties>
           <font name="Arial Black" size="20" style="1"/>
