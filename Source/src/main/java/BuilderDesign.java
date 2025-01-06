@@ -21,6 +21,7 @@ public class BuilderDesign extends JFrame {
     private JButton backToMainPanelButton;
     private JPanel vehicleTypesPanels;
     Vehicle.Builder builder=new Vehicle.Builder();
+    HuggingFaceClient client=new HuggingFaceClient();
 
 
     // Variabile pentru componentele din ConfigPanel
@@ -264,22 +265,28 @@ public class BuilderDesign extends JFrame {
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(buildVehicle().getDescription());
+                // Generăm descrierea vehiculului
+                String prompt = buildVehicle().getDescription();
+                System.out.println("Vehicle Description: " + prompt);
 
-//                System.out.println("Generating image via Prodia API...");
-//                String outputPath = "generated_vehicle_image.png";
-//                ProdiaClient ProdiaIntegration = new ProdiaClient();
-//                BufferedImage vehicleImage = ProdiaClient.generateVehicleImage(buildVehicle().getDescription(),outputPath,buildVehicle().getVehicleID());
-//                if (vehicleImage != null) {
-//                    System.out.println("Image generated and saved to: " + outputPath);
-//
-//                    // Afisare imagine
-//                    ImageDisplayPanel.displayImageInWindow(vehicleImage, "Generated Vehicle");
-//                } else {
-//                    System.out.println("Failed to generate vehicle image.");
-//                }
+                System.out.println("Generating image via HuggingFaceClient...");
+                try {
+                    // Specificăm calea de salvare pentru imagine
+                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\vehicle_image.png";
+
+                    // Apelăm metoda pentru a genera și salva imaginea
+                    HuggingFaceClient.generateImage(prompt, outputPath);
+                    System.out.println("Image generated and saved successfully at " + outputPath);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
+
 
 
         return carPanel;
@@ -392,22 +399,27 @@ public class BuilderDesign extends JFrame {
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(buildVehicle().getDescription());
+                // Generăm descrierea vehiculului
+                String prompt = buildVehicle().getDescription();
+                System.out.println("Vehicle Description: " + prompt);
 
-//                System.out.println("Generating image via Prodia API...");
-//                String outputPath = "generated_vehicle_image.png";
-//                ProdiaClient ProdiaIntegration = new ProdiaClient();
-//                BufferedImage vehicleImage = ProdiaClient.generateVehicleImage(buildVehicle().getDescription(),outputPath,buildVehicle().getVehicleID());
-//                if (vehicleImage != null) {
-//                    System.out.println("Image generated and saved to: " + outputPath);
-//
-//                    // Afisare imagine
-//                    ImageDisplayPanel.displayImageInWindow(vehicleImage, "Generated Vehicle");
-//                } else {
-//                    System.out.println("Failed to generate vehicle image.");
-//                }
+                System.out.println("Generating image via HuggingFaceClient...");
+                try {
+                    // Specificăm calea de salvare pentru imagine
+                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\"+buildVehicle().getVehicleID()+".png";
+
+                    // Apelăm metoda pentru a genera și salva imaginea
+                    HuggingFaceClient.generateImage(prompt, outputPath);
+                    System.out.println("Image generated and saved successfully at " + outputPath);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
 
 
         return motoPanel;
@@ -452,6 +464,7 @@ public class BuilderDesign extends JFrame {
 
         CustomComponent customComponent = new CustomComponent("custom",customComponentDescription);
         builder.addComponent(customComponent);
+        System.out.println(customComponentDescription);
 
         return builder.build();
     }
