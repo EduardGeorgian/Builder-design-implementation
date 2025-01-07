@@ -14,9 +14,9 @@ public class Vehicle {
     }
 
     public String getDescription() {
-        StringBuilder description = new StringBuilder("Create a full-view image of a "+ vehicleType+ " that has these features: \n");
+        StringBuilder description = new StringBuilder(vehicleType+ " with these features: \n");
         for (VehicleComponent component : components) {
-            description.append(" - ").append(component.getDescription()).append("\n");
+            description.append(" , ").append(component.getDescription()).append("\n");
         }
         return description.toString();
     }

@@ -1,15 +1,14 @@
-import ProdiaAI.ProdiaClient;
 import VehicleComponents.CustomComponent;
 import VehicleComponents.Engine;
 import VehicleComponents.Frame;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Objects;
 
 public class BuilderDesign extends JFrame {
@@ -18,6 +17,9 @@ public class BuilderDesign extends JFrame {
     private JPanel ConfigPanel;
     private JButton createVehicleButton;
     private JLabel titleLabel;
+    private JLabel myVehiclesLabel;
+    private JScrollPane scrollPane;
+    private JButton openImageButton;
     private JButton backToMainPanelButton;
     private JPanel vehicleTypesPanels;
     Vehicle.Builder builder=new Vehicle.Builder();
@@ -35,14 +37,90 @@ public class BuilderDesign extends JFrame {
     private JTextField carFuelTypeField;
     private JTextField carPowerField;
     private JTextField carTorqueField;
-    private JTextField customUpgradeField;
+    private JTextField carCustomUpgradeField;
+    private JTextField motorcycleCustomUpgradeField;
+    private JTextArea vehicleDescriptionArea;
+    private JLabel statusLabel;
+    private JButton viewCarImageButton;
+    private JButton viewMotorcycleImageButton;
 
     public BuilderDesign() {
+        String imageDirectoryPath="D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images";
+
+        DefaultListModel<String> imageListModel = new DefaultListModel<>();
+        // inncarca numele fisierelor din director
+        File imageDirectory = new File(imageDirectoryPath);
+        if (imageDirectory.exists() && imageDirectory.isDirectory()) {
+            for (File file : imageDirectory.listFiles()) {
+                if (file.isFile() && file.getName().endsWith(".png")) {
+                    imageListModel.addElement(file.getName());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Image directory not found: " + imageDirectoryPath,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        JList<String> imageList = new JList<>(imageListModel);
+        imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        imageList.setFont(new Font("Arial Black", Font.PLAIN, 12 ));
+        imageList.setVisibleRowCount(10);
+        imageList.setBounds(0, 0, 500, 400);
+        imageList.setBackground(new Color(92,146,139));
+        scrollPane.add(imageList);
+        imageList.revalidate();
+        imageList.repaint();
+        scrollPane.setViewportView(imageList);
+
+        imageList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    String selectedFile = imageList.getSelectedValue();
+                    if (selectedFile != null) {
+                        JFrame frame = new JFrame("Image Viewer");
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame.setSize(1080, 860);
+
+                        //incarcam imaginea
+                        ImageIcon imageIcon = new ImageIcon(imageDirectoryPath+"\\" + selectedFile);
+                        JLabel label = new JLabel(imageIcon);
+                        frame.add(new JScrollPane(label)); // scroll daca imaginea este prea mare
+                        frame.setVisible(true);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
         //Panel uri separate pentru main si pentru configurare
         ConfigPanel = new JPanel();
         ConfigPanel.setLayout(null);
         ConfigPanel.setBounds(0,0,1080,850);
         ConfigPanel.setVisible(false);
+        ConfigPanel.setBackground(new Color(53,146,142));
+
+         statusLabel= new JLabel("");
+            statusLabel.setBounds(700,400,400,200);
+            statusLabel.setFont(new Font("Arial Black", Font.PLAIN, 20));
+//        vehicleDescriptionArea=new JTextArea();
+//        vehicleDescriptionArea.setEditable(false);
+//        vehicleDescriptionArea.setBackground(Color.WHITE);
+//        vehicleDescriptionArea.setLineWrap(true);
+//        vehicleDescriptionArea.setWrapStyleWord(true);
+//        vehicleDescriptionArea.setBounds(800,400,200,200);
+//        vehicleDescriptionArea.setFont(new Font("Arial",Font.PLAIN,10));
+
+        ConfigPanel.add(statusLabel);
+//        ConfigPanel.add(vehicleDescriptionArea);
 
         //panel pentru a schimba afisarea in functie de ce vehicul construim
         vehicleTypesPanels = new JPanel(new CardLayout());
@@ -58,6 +136,13 @@ public class BuilderDesign extends JFrame {
                 MainPanel.setVisible(true);
                 createVehicleButton.setVisible(true);
                 createVehicleButton.setEnabled(true);
+                myVehiclesLabel.setVisible(true);
+                imageList.revalidate();
+                imageList.repaint();
+                scrollPane.repaint();
+                scrollPane.revalidate();
+                scrollPane.setVisible(true);
+                titleLabel.setText("Vehicle Builder");
             }
         });
 
@@ -120,6 +205,8 @@ public class BuilderDesign extends JFrame {
                 createVehicleButton.setEnabled(false);
                 createVehicleButton.setVisible(false);
                 ConfigPanel.setVisible(true);
+                myVehiclesLabel.setVisible(false);
+                scrollPane.setVisible(false);
             }
         });
 
@@ -159,11 +246,13 @@ public class BuilderDesign extends JFrame {
 
     }
 
-
     private JPanel createCarPanel(){
         JPanel carPanel=new JPanel();
         carPanel.setLayout(null);
         carPanel.setPreferredSize(new Dimension(1080,860));
+        carPanel.setBackground(new Color(92,146,139));
+
+
 
 
         JLabel frameType=new JLabel("Frame type");
@@ -174,6 +263,8 @@ public class BuilderDesign extends JFrame {
         carFrameTypeMenu.setBounds(250,100,200,30);
         carPanel.add(frameType);
         carPanel.add(carFrameTypeMenu);
+
+
 
 
         JLabel frameName=new JLabel("Frame name or inspiration");
@@ -252,11 +343,18 @@ public class BuilderDesign extends JFrame {
 
         JLabel customUpgrades=new JLabel("Custom upgrades");
         customUpgrades.setBounds(10,500,200,30);
-        customUpgradeField=new JTextField();
-        customUpgradeField.setBounds(250,500,200,50);
+        carCustomUpgradeField=new JTextField();
+        carCustomUpgradeField.setBounds(250,500,200,50);
 
         carPanel.add(customUpgrades);
-        carPanel.add(customUpgradeField);
+        carPanel.add(carCustomUpgradeField);
+
+
+        viewCarImageButton = new JButton("View generated image");
+        viewCarImageButton.setBounds(250, 600, 200, 30);
+        viewCarImageButton.setFocusPainted(false);
+        viewCarImageButton.setEnabled(false); // initial butonul este dezactivat.
+        carPanel.add(viewCarImageButton);
 
         JButton buildButton = new JButton("Build");
         buildButton.setBounds(10,600,200,30);
@@ -265,18 +363,37 @@ public class BuilderDesign extends JFrame {
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Generăm descrierea vehiculului
+                statusLabel.setText("Generating your vehicle...");
                 String prompt = buildVehicle().getDescription();
                 System.out.println("Vehicle Description: " + prompt);
+
+
 
                 System.out.println("Generating image via HuggingFaceClient...");
                 try {
                     // Specificăm calea de salvare pentru imagine
-                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\vehicle_image.png";
+                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\"+buildVehicle().getVehicleID()+".png";
 
                     // Apelăm metoda pentru a genera și salva imaginea
                     HuggingFaceClient.generateImage(prompt, outputPath);
                     System.out.println("Image generated and saved successfully at " + outputPath);
+                    statusLabel.setText("Vehicle generated.");
+                    viewCarImageButton.setEnabled(true);//activam butonul cand se genereaza imaginea
+
+                    viewCarImageButton.addActionListener(new ActionListener() {
+                       @Override
+                       public void actionPerformed(ActionEvent e) {
+                           JFrame imageFrame=new JFrame("Generated image");
+                           imageFrame.setSize(1080,860);
+                           imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                           ImageIcon imageIcon=new ImageIcon(outputPath);
+                           JLabel imageLabel=new JLabel(imageIcon);
+                           imageFrame.add(imageLabel);
+
+                           imageFrame.setVisible(true);
+                       }
+                    });
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -298,6 +415,7 @@ public class BuilderDesign extends JFrame {
         JPanel motoPanel=new JPanel();
         motoPanel.setLayout(null);
         motoPanel.setPreferredSize(new Dimension(1080,860));
+        motoPanel.setBackground(new Color(92,146,139));
 
 
         JLabel frameType=new JLabel("Frame type");
@@ -386,11 +504,18 @@ public class BuilderDesign extends JFrame {
 
         JLabel customUpgrades=new JLabel("Custom upgrades");
         customUpgrades.setBounds(10,500,200,30);
-        customUpgradeField=new JTextField();
-        customUpgradeField.setBounds(250,500,200,50);
+        motorcycleCustomUpgradeField=new JTextField();
+        motorcycleCustomUpgradeField.setBounds(250,500,200,50);
 
         motoPanel.add(customUpgrades);
-        motoPanel.add(customUpgradeField);
+        motoPanel.add(motorcycleCustomUpgradeField);
+
+        viewMotorcycleImageButton = new JButton("View generated image");
+        viewMotorcycleImageButton.setBounds(250, 600, 200, 30);
+        viewMotorcycleImageButton.setFocusPainted(false);
+        viewMotorcycleImageButton.setEnabled(false); // initial butonul este dezactivat.
+        motoPanel.add(viewMotorcycleImageButton);
+
 
         JButton buildButton = new JButton("Build");
         buildButton.setBounds(10,600,200,30);
@@ -399,9 +524,10 @@ public class BuilderDesign extends JFrame {
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Generăm descrierea vehiculului
+                statusLabel.setText("Generating your vehicle...");
                 String prompt = buildVehicle().getDescription();
                 System.out.println("Vehicle Description: " + prompt);
+
 
                 System.out.println("Generating image via HuggingFaceClient...");
                 try {
@@ -411,6 +537,24 @@ public class BuilderDesign extends JFrame {
                     // Apelăm metoda pentru a genera și salva imaginea
                     HuggingFaceClient.generateImage(prompt, outputPath);
                     System.out.println("Image generated and saved successfully at " + outputPath);
+                    statusLabel.setText("Vehicle Generated");
+                    viewMotorcycleImageButton.setEnabled(true);//activam butonul cand se genereaza imaginea
+
+                    viewMotorcycleImageButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            JFrame imageFrame=new JFrame("Generated image");
+                            imageFrame.setSize(1080,860);
+                            imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                            ImageIcon imageIcon=new ImageIcon(outputPath);
+                            JLabel imageLabel=new JLabel(imageIcon);
+                            imageFrame.add(imageLabel);
+
+                            imageFrame.setVisible(true);
+                        }
+                    });
+
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -441,7 +585,14 @@ public class BuilderDesign extends JFrame {
         String fuelType = carFuelTypeField.getText();
         int power = Integer.parseInt(carPowerField.getText());
         int torque = Integer.parseInt(carTorqueField.getText());
-        String customComponentDescription=customUpgradeField.getText();
+        String customComponentDescription;
+        if(vehicleType.equals("Car")){
+            customComponentDescription=carCustomUpgradeField.getText();
+        }else if(vehicleType.equals("Motorcycle")){
+            customComponentDescription=motorcycleCustomUpgradeField.getText();
+        }else{
+            customComponentDescription="";
+        }
 
         builder.setName(vehicleName)
                 .setVehicleType(vehicleType);

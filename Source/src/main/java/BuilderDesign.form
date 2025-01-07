@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="BuilderDesign">
-  <grid id="27dc6" binding="MainPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
-    <margin top="0" left="0" bottom="300" right="0"/>
+  <grid id="27dc6" binding="MainPanel" layout-manager="GridLayoutManager" row-count="4" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+    <margin top="0" left="0" bottom="100" right="0"/>
     <constraints>
-      <xy x="9" y="30" width="709" height="554"/>
+      <xy x="300" y="47" width="861" height="537"/>
     </constraints>
     <properties>
-      <background color="-5525578"/>
+      <background color="-13266290"/>
       <enabled value="true"/>
       <foreground color="-16777216"/>
     </properties>
@@ -14,7 +14,7 @@
     <children>
       <component id="66742" class="javax.swing.JLabel" binding="titleLabel">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+          <grid row="0" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
             <minimum-size width="400" height="-1"/>
             <preferred-size width="400" height="-1"/>
             <maximum-size width="400" height="-1"/>
@@ -29,24 +29,42 @@
       </component>
       <component id="aebb2" class="javax.swing.JButton" binding="createVehicleButton" default-binding="true">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+          <grid row="3" column="0" row-span="1" col-span="7" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="300" height="80"/>
             <maximum-size width="300" height="100"/>
           </grid>
         </constraints>
         <properties>
+          <background color="-10710389"/>
           <font name="Arial Black" size="20" style="1"/>
+          <foreground color="-10710389"/>
           <text value="Create Vehicle"/>
         </properties>
       </component>
-      <component id="b846e" class="javax.swing.JSeparator">
+      <component id="1a70d" class="javax.swing.JLabel" binding="myVehiclesLabel">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="5" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <background color="-16777216"/>
+          <font name="Arial Black" size="20" style="1"/>
+          <text value="My vehicles: "/>
         </properties>
       </component>
+      <scrollpane id="3f3ea" binding="scrollPane">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="300" height="100"/>
+            <maximum-size width="500" height="200"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-10710389"/>
+          <enabled value="false"/>
+          <foreground color="-16777216"/>
+        </properties>
+        <border type="none"/>
+        <children/>
+      </scrollpane>
     </children>
   </grid>
 </form>

@@ -12,6 +12,6 @@ public class CustomComponent implements VehicleComponent {
     }
     @Override
     public String getDescription() {
-        return componentDescription;
+        return " and add:"+componentDescription;
     }
 }
