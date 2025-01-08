@@ -1,11 +1,16 @@
 package VehicleComponents;
 
+
+// Clasa Engine implementeaza interfata VehicleComponent
 public class Engine  implements VehicleComponent {
     private final String engineType;//electric, motor termic, ardere interna, externa, motoare pneumatice
     private final String fuelType;//diesel,gaz,benzina
-    private final int horsePower;
-    private final int torque;
+    private final int horsePower;//puterea motorului
+    private final int torque;//cuplul motorului
 
+
+
+    // Constructorul este privat pentru a forta utilizarea Builder pentru crearea unui obiect Engine
     private Engine(String engineType, String fuelType, int horsePower, int torque) {
         this.engineType = engineType;
         this.fuelType = fuelType;
@@ -15,6 +20,7 @@ public class Engine  implements VehicleComponent {
 
     @Override
     public String getDescription(){
+        // Se creeaza un string ce contine toate caracteristicile motorului
         return "Engine: "+engineType
                 +" Fuel: "+fuelType
                 +" Horsepower: "+horsePower
@@ -42,6 +48,7 @@ public class Engine  implements VehicleComponent {
             this.torque = torque;
             return this;
         }
+        // Metoda care creeaza si returneaza obiectul Engine folosind valorile setate anterior
         public Engine build() {
             return new Engine(engineType, fuelType, horsePower, torque);
         }

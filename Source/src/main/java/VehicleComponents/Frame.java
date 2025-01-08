@@ -15,6 +15,7 @@ public class Frame implements VehicleComponent {
         this.doorNumber = doorNumber;
     }
 
+    //metoda prin care returnam descrierea componentei
     @Override
     public String getDescription() {
         return

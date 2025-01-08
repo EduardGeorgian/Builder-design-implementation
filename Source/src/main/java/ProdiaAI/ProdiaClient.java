@@ -14,17 +14,26 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 
+
+//initial am folosit prodiaAi, era gratuit si mergea bine, insa pe 1 ianuarie... varianta de api gratuita
+//s-a desfiintat... si a trebuit sa caut in 2 zile alt api gratuit care sa mearga cat de cat decent
+//deci daca vreodata o sa cumpar prodia API, o sa am implementarea deja facuta
+
 public class ProdiaClient {
 
-    private static final String API_URL = "https://api.prodia.com/v1/sd/generate";
-    private static final String API_KEY = "39dc32a2-6991-41b4-95d2-a95563f8ef38";
-   static Gson gson = new Gson();
+    private static final String API_URL = "https://api.prodia.com/v1/sd/generate"; //url-ul pentru conectat la api
+    private static final String API_KEY = "39dc32a2-6991-41b4-95d2-a95563f8ef38"; //cheia de api
+    static Gson gson = new Gson(); //un obiect gson pentru a face o clasa intr-un obiect JSON
 
+
+    //functie de generat imaginea vehiculului
     public static BufferedImage generateVehicleImage(String vehicleDescription, String outputPath, String vehicleID) {
         System.out.println(vehicleDescription);
         try {
-            GenerateCallRequest callRequest=new GenerateCallRequest(vehicleDescription);
+            //instantiem un obiect GenerateCallRequest
+            GenerateCallRequest callRequest = new GenerateCallRequest(vehicleDescription);
             HttpClient client = HttpClient.newHttpClient();
+            //creeam un request cu ce ne ofera java
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.prodia.com/v1/sd/generate"))
                     .header("accept", "application/json")
@@ -35,7 +44,6 @@ public class ProdiaClient {
             System.out.println("Request created");
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println(response.body());
-
 
 
             GenerateCallResponse callResponse = gson.fromJson(response.body(), GenerateCallResponse.class);
@@ -81,7 +89,7 @@ public class ProdiaClient {
     }
 
 
-    private static BufferedImage downloadImage(String imageUrl, String outputPath,String imageId) throws Exception {
+    private static BufferedImage downloadImage(String imageUrl, String outputPath, String imageId) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) new URI(imageUrl).toURL().openConnection();
         connection.setRequestMethod("GET");
 
