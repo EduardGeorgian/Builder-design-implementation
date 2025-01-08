@@ -13,17 +13,17 @@ import java.util.Objects;
 
 public class BuilderDesign extends JFrame {
 
-    private JPanel MainPanel;   //panel ul principal, care o sa contina butonul de create vehicle si lista obiectelor deja construite
-    private JPanel ConfigPanel; //panoul de configurare, care o sa contina la randul lui fiecare panou pentru feicare tip de vehicul
-    private JButton createVehicleButton; //butonul de create vehicle
+    private JPanel MainPanel;   // Panel ul principal, care o sa contina butonul de create vehicle si lista obiectelor deja construite
+    private JPanel ConfigPanel; // Panoul de configurare, care o sa contina la randul lui fiecare panou pentru feicare tip de vehicul
+    private JButton createVehicleButton; // Butonul de create vehicle
     private JLabel titleLabel;
     private JLabel myVehiclesLabel;
     private JScrollPane scrollPane;
-    //private JButton openImageButton;//deschiderea imaginilor poate fi facuta si printrun buton dar am ales sa fie la dublu click
+    // Private JButton openImageButton;//deschiderea imaginilor poate fi facuta si printrun buton dar am ales sa fie la dublu click
     // Buton pentru a reveni la panoul principal
     private JButton backToMainPanelButton;
 
-    // Panou care va conține tipurile de vehicule
+    // Panou care va contine tipurile de vehicule
     private JPanel vehicleTypesPanels;
 
     // Crearea unui builder pentru vehicul
@@ -50,86 +50,86 @@ public class BuilderDesign extends JFrame {
     private JButton viewCarImageButton;  // Buton pentru vizualizarea imaginii masinii
     private JButton viewMotorcycleImageButton;  // Buton pentru vizualizarea imaginii motocicletei
 
-    // Constructorul clasei BuilderDesign, care configurează interfața utilizatorului
+    // Constructorul clasei BuilderDesign, care configureaza interfata utilizatorului
     public BuilderDesign() {
-        // Calea către directorul care conține imaginile generate
+        // Calea catre directorul care contine imaginile generate
         String imageDirectoryPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images";
 
-        // Crearea unui model de listă pentru imagini
+        // Crearea unui model de lista pentru imagini
         DefaultListModel<String> imageListModel = new DefaultListModel<>();
 
-        // Încarcă numele fișierelor din directorul specificat
+        // Incarca numele fișierelor din directorul specificat
         File imageDirectory = new File(imageDirectoryPath);
 
-        // Verifică dacă directorul există și este un director valid
+        // Verifica dacă directorul exista si este un director valid
         if (imageDirectory.exists() && imageDirectory.isDirectory()) {
-            // Parcurge fișierele din director
+            // Parcurge fisierele din director
             for (File file : imageDirectory.listFiles()) {
-                // Adaugă fișierele cu extensia .png în modelul listei
+                // Adauga fișierele cu extensia .png în modelul listei
                 if (file.isFile() && file.getName().endsWith(".png")) {
                     imageListModel.addElement(file.getName());
                 }
             }
         } else {
-            // Dacă directorul nu există sau nu este valid, afișează un mesaj de eroare
+            // Dacă directorul nu exista sau nu este valid, afisează un mesaj de eroare
             JOptionPane.showMessageDialog(null, "Image directory not found: " + imageDirectoryPath,
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Crează un JList pentru a afișa lista de imagini, folosind modelul de listă definit anterior
+        // Creaz un JList pentru a afișa lista de imagini, folosind modelul de listă definit anterior
         JList<String> imageList = new JList<>(imageListModel);
 
-// Permite selecția unui singur element din listă
+// Permite selecția unui singur element din lista
         imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-// Setează fontul textului din listă
+// Setează fontul textului din lista
         imageList.setFont(new Font("Arial Black", Font.PLAIN, 12));
 
-// Setează numărul de rânduri vizibile în lista de imagini
+// Seteaza numărul de rânduri vizibile în lista de imagini
         imageList.setVisibleRowCount(10);
 
-// Setează dimensiunile JList pentru a controla dimensiunea afișării
+// Seteaza dimensiunile JList pentru a controla dimensiunea afișării
         imageList.setBounds(0, 0, 500, 400);
 
-// Setează culoarea de fundal a JList
+// Seteaza culoarea de fundal a JList
         imageList.setBackground(new Color(92, 146, 139));
 
-// Adaugă JList-ul într-un JScrollPane pentru a permite derularea listelor mai lungi
+// Adauga JList-ul într-un JScrollPane pentru a permite derularea listelor mai lungi
         scrollPane.add(imageList);
 
-// Actualizează și redesenază lista pentru a reflecta modificările
+// Actualizeaza și redesenaza lista
         imageList.revalidate();
         imageList.repaint();
 
-// Setează JScrollPane pentru a vizualiza JList-ul
+// Seteaz JScrollPane pentru a vizualiza JList-ul
         scrollPane.setViewportView(imageList);
 
-// Adaugă un mouse listener pentru a răspunde la click-uri pe listă
+// Adauga un mouse listener pentru a raspunde la click-uri pe lista
         imageList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Verifică dacă utilizatorul a dat dublu click pe un element din listă
+                // Verifica dacă utilizatorul a dat dublu click pe un element din lista
                 if (e.getClickCount() == 2) {
-                    // Obține fișierul selectat din listă
+                    // Obtine fisierul selectat din lista
                     String selectedFile = imageList.getSelectedValue();
 
-                    // Dacă fișierul selectat nu este nul
+                    // Dacă fisierul selectat nu este nul
                     if (selectedFile != null) {
-                        // Creează o fereastră nouă pentru vizualizarea imaginii
+                        // Creeaza o fereastra noua pentru vizualizarea imaginii
                         JFrame frame = new JFrame("Image Viewer");
-                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Închide fereastra la click pe X
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // inchide fereastra la click pe X
                         frame.setSize(1080, 860);  // Setează dimensiunea ferestrei
 
-                        // Încarcă imaginea utilizând calea completă
+                        // Incarcă imaginea utilizand calea completa
                         ImageIcon imageIcon = new ImageIcon(imageDirectoryPath + "\\" + selectedFile);
 
-                        // Creează un JLabel pentru a afișa imaginea
+                        // Creeaza un JLabel pentru a afisa imaginea
                         JLabel label = new JLabel(imageIcon);
 
-                        // Adaugă JLabel într-un JScrollPane pentru a permite derularea imaginii dacă este prea mare
+                        // Adaugă JLabel intr un JScrollPane pentru a permite derularea imaginii dacă este prea mare
                         frame.add(new JScrollPane(label));
 
-                        // Afișează fereastra
+                        // Afiseaza fereastra
                         frame.setVisible(true);
                     }
                 }
@@ -307,7 +307,7 @@ public class BuilderDesign extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     color[0][0] = JColorChooser.showDialog(null, "Pick the color", color[0][0]); // Alege culoarea
                     if (color[0][0] == null) {
-                        color[0][0] = Color.WHITE; // Daca nu s-a ales nici o culoare, seteaza alb
+                        color[0][0] = Color.WHITE; // Daca nu s a ales nici o culoare, seteaza alb
                     }
                     frameColorButton.setBackground(color[0][0]); // Seteaza fundalul butonului la culoarea aleasa
                     frameColorButton.setForeground(color[0][0]); // Seteaza culoarea textului la culoarea aleasa
@@ -317,7 +317,7 @@ public class BuilderDesign extends JFrame {
             }
         });
 
-        carPanel.add(frameColor); // Adauga label-ul pentru culoare
+        carPanel.add(frameColor); // Adauga label ul pentru culoare
         carPanel.add(frameColorButton); // Adauga butonul pentru culoare
 
         String frameColorFinal = color[0][0].toString(); // Salveaza culoarea finala aleasa
@@ -331,7 +331,7 @@ public class BuilderDesign extends JFrame {
         carPanel.add(doorNumberLabel); // Adauga label-ul in panou
         carPanel.add(carDoorNumberField); // Adauga campul de text in panou
 
-        // Creaza label-uri si campuri de text pentru motor, combustibil, putere si cuplu
+        // Creaza label uri si campuri de text pentru motor, combustibil, putere si cuplu
         JLabel engine = new JLabel("Engine type");
         engine.setBounds(10, 300, 200, 30);
         carEngineTypeField = new JTextField();
@@ -363,7 +363,7 @@ public class BuilderDesign extends JFrame {
         carPanel.add(torque);
         carPanel.add(carTorqueField);
 
-        // Creaza un label si un camp de text pentru upgrade-uri personalizate
+        // Creaza un label si un camp de text pentru upgrade uri personalizate
         JLabel customUpgrades = new JLabel("Custom upgrades");
         customUpgrades.setBounds(10, 500, 200, 30);
         carCustomUpgradeField = new JTextField();
@@ -413,15 +413,15 @@ public class BuilderDesign extends JFrame {
                             imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                             ImageIcon imageIcon = new ImageIcon(outputPath); // Creeaza o iconita cu imaginea generata
-                            JLabel imageLabel = new JLabel(imageIcon); // Adauga imaginea intr-un label
-                            imageFrame.add(imageLabel); // Adauga label-ul in fereastra
+                            JLabel imageLabel = new JLabel(imageIcon); // Adauga imaginea intr un label
+                            imageFrame.add(imageLabel); // Adauga label ul in fereastra
 
                             imageFrame.setVisible(true); // Afiseaza fereastra
                         }
                     });
 
                 } catch (Exception ex) {
-                    ex.printStackTrace(); // Afiseaza eroarea in caz de esec
+                    ex.printStackTrace(); // Afiseaza eroarea in caz ca nu merge
                     JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE); // Mesaj de eroare
                 }
             }
@@ -471,7 +471,7 @@ public class BuilderDesign extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     color[0][0] = JColorChooser.showDialog(null, "Pick the color", color[0][0]); // Alege culoarea
                     if (color[0][0] == null) {
-                        color[0][0] = Color.WHITE; // Daca nu s-a ales nici o culoare, se seteaza alb
+                        color[0][0] = Color.WHITE; // Daca nu s a ales nici o culoare, se seteaza alb
                     }
                     frameColorButton.setBackground(color[0][0]); // Seteaza fundalul butonului
                     frameColorButton.setForeground(color[0][0]); // Seteaza culoarea textului
@@ -480,7 +480,7 @@ public class BuilderDesign extends JFrame {
                 });
             }
         });
-        motoPanel.add(frameColor); // Adauga label-ul pentru culoare
+        motoPanel.add(frameColor); // Adauga labelul pentru culoare
         motoPanel.add(frameColorButton); // Adauga butonul pentru culoare
 
         // Creeaza campuri pentru motor, combustibil, putere si cuplu
@@ -516,7 +516,7 @@ public class BuilderDesign extends JFrame {
         motoPanel.add(torque);
         motoPanel.add(carTorqueField);
 
-        // Creeaza un camp pentru upgrade-uri personalizate
+        // Creeaza un camp pentru upgrade uri personalizate
         JLabel customUpgrades = new JLabel("Custom upgrades");
         customUpgrades.setBounds(10, 500, 200, 30);
         motorcycleCustomUpgradeField = new JTextField();
@@ -588,7 +588,7 @@ public class BuilderDesign extends JFrame {
         // Se preia tipul vehiculului selectat din meniu
         String vehicleType = Objects.requireNonNull(vehicleTypeMenu.getSelectedItem().toString());
 
-        // Se preia tipul si numele cadrului, precum si culoarea acestuia
+        // Se preia tipul , numele si culoarea
         String frameType = Objects.requireNonNull(carFrameTypeMenu.getSelectedItem()).toString();
         String frameName = carFrameNameField.getText();
         int red = carFrameColorButton.getBackground().getRed();
