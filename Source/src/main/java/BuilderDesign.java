@@ -19,6 +19,8 @@ public class BuilderDesign extends JFrame {
     private JLabel titleLabel;
     private JLabel myVehiclesLabel;
     private JScrollPane scrollPane;
+    private String laptopPath="C:\\Users\\edied\\IdeaProjects\\Builder-design-implementation\\Resources\\generated-images";
+    private String pcPath="D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images";
     // Private JButton openImageButton;//deschiderea imaginilor poate fi facuta si printrun buton dar am ales sa fie la dublu click
     // Buton pentru a reveni la panoul principal
     private JButton backToMainPanelButton;
@@ -53,7 +55,7 @@ public class BuilderDesign extends JFrame {
     // Constructorul clasei BuilderDesign, care configureaza interfata utilizatorului
     public BuilderDesign() {
         // Calea catre directorul care contine imaginile generate
-        String imageDirectoryPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images";
+        String imageDirectoryPath = laptopPath;
 
         // Crearea unui model de lista pentru imagini
         DefaultListModel<String> imageListModel = new DefaultListModel<>();
@@ -65,7 +67,7 @@ public class BuilderDesign extends JFrame {
         if (imageDirectory.exists() && imageDirectory.isDirectory()) {
             // Parcurge fisierele din director
             for (File file : imageDirectory.listFiles()) {
-                // Adauga fișierele cu extensia .png în modelul listei
+                // Adauga fisierele cu extensia .png în modelul listei
                 if (file.isFile() && file.getName().endsWith(".png")) {
                     imageListModel.addElement(file.getName());
                 }
@@ -386,46 +388,101 @@ public class BuilderDesign extends JFrame {
         carPanel.add(buildButton);
 
         // Adauga un listener pentru butonul de construire a vehiculului
+//        buildButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                statusLabel.setText("Generating your vehicle...");// Afiseaza mesajul de generare
+//                statusLabel.repaint();
+//                statusLabel.revalidate();
+//                Vehicle vehicle;
+//                vehicle=buildVehicle();
+//                String prompt = vehicle.getDescription(); // Obtine descrierea vehiculului construit
+//                System.out.println("Vehicle Description: " + prompt); // Afiseaza descrierea vehiculului
+//
+//                try {
+//                    // Specificam calea de salvare pentru imaginea generata
+//                    String outputPath = laptopPath+"\\"+vehicle.getVehicleID() + ".png";
+//
+//                    // Apelam metoda pentru a genera imaginea
+//                    HuggingFaceClient.generateImage(prompt, outputPath);
+//                    System.out.println("Image generated and saved successfully at " + outputPath); // Mesaj de succes
+//                    statusLabel.setText("Vehicle generated."); // Actualizeaza statusul
+//                    viewCarImageButton.setEnabled(true); // Activeaza butonul pentru a vizualiza imaginea
+//
+//                    // Adauga un listener pentru a deschide imaginea generata
+//                    viewCarImageButton.addActionListener(new ActionListener() {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e) {
+//                            JFrame imageFrame = new JFrame("Generated image"); // Creeaza o fereastra pentru imagine
+//                            imageFrame.setSize(1080, 860);
+//                            imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//
+//                            ImageIcon imageIcon = new ImageIcon(outputPath); // Creeaza o iconita cu imaginea generata
+//                            JLabel imageLabel = new JLabel(imageIcon); // Adauga imaginea intr un label
+//                            imageFrame.add(imageLabel); // Adauga label ul in fereastra
+//
+//                            imageFrame.setVisible(true); // Afiseaza fereastra
+//                        }
+//                    });
+//
+//                } catch (Exception ex) {
+//                    ex.printStackTrace(); // Afiseaza eroarea in caz ca nu merge
+//                    JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE); // Mesaj de eroare
+//                }
+//            }
+//        });
+
+        // Schimbam logica api ului pe alt thread, pentru ca nu se randeaza statusLabel
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Generating your vehicle..."); // Afiseaza mesajul de generare
+                statusLabel.setText("Generating your vehicle...");
+                statusLabel.repaint(); // Asigura ca modificarea este afisata imediat
 
-                String prompt = buildVehicle().getDescription(); // Obtine descrierea vehiculului construit
-                System.out.println("Vehicle Description: " + prompt); // Afiseaza descrierea vehiculului
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        Vehicle vehicle = buildVehicle();
+                        String prompt = vehicle.getDescription();
 
-                try {
-                    // Specificam calea de salvare pentru imaginea generata
-                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\" + buildVehicle().getVehicleID() + ".png";
+                        try {
+                            String outputPath = laptopPath + "\\" + vehicle.getVehicleID() + ".png";
+                            HuggingFaceClient.generateImage(prompt, outputPath);
+                            System.out.println("Image generated and saved successfully at " + outputPath);
 
-                    // Apelam metoda pentru a genera imaginea
-                    HuggingFaceClient.generateImage(prompt, outputPath);
-                    System.out.println("Image generated and saved successfully at " + outputPath); // Mesaj de succes
-                    statusLabel.setText("Vehicle generated."); // Actualizeaza statusul
-                    viewCarImageButton.setEnabled(true); // Activeaza butonul pentru a vizualiza imaginea
+                            SwingUtilities.invokeLater(() -> {
+                                viewCarImageButton.setEnabled(true); // Activeza butonul dupa generare
+                                viewCarImageButton.addActionListener(ev -> {
+                                    JFrame imageFrame = new JFrame("Generated image");
+                                    imageFrame.setSize(1080, 860);
+                                    imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                    // Adauga un listener pentru a deschide imaginea generata
-                    viewCarImageButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            JFrame imageFrame = new JFrame("Generated image"); // Creeaza o fereastra pentru imagine
-                            imageFrame.setSize(1080, 860);
-                            imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                    ImageIcon imageIcon = new ImageIcon(outputPath);
+                                    JLabel imageLabel = new JLabel(imageIcon);
+                                    imageFrame.add(imageLabel);
 
-                            ImageIcon imageIcon = new ImageIcon(outputPath); // Creeaza o iconita cu imaginea generata
-                            JLabel imageLabel = new JLabel(imageIcon); // Adauga imaginea intr un label
-                            imageFrame.add(imageLabel); // Adauga label ul in fereastra
-
-                            imageFrame.setVisible(true); // Afiseaza fereastra
+                                    imageFrame.setVisible(true);
+                                });
+                            });
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                                    null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE
+                            ));
                         }
-                    });
+                        return null;
+                    }
 
-                } catch (Exception ex) {
-                    ex.printStackTrace(); // Afiseaza eroarea in caz ca nu merge
-                    JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE); // Mesaj de eroare
-                }
+                    @Override
+                    protected void done() {
+                        statusLabel.setText("Vehicle generated.");
+                    }
+                };
+
+                worker.execute(); // Pornește worker-ul
             }
         });
+
 
         return carPanel; // Returneaza panoul de configurare a masinii
     }
@@ -541,38 +598,50 @@ public class BuilderDesign extends JFrame {
         buildButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                statusLabel.setText("Generating your vehicle..."); // Mesaj de generare
-                String prompt = buildVehicle().getDescription(); // Obtine descrierea vehiculului
+                statusLabel.setText("Generating your vehicle...");
+                statusLabel.repaint(); // Asigura ca modificarea este afisata imediat
 
-                try {
-                    // Specifica locatia pentru a salva imaginea generata
-                    String outputPath = "D:\\PIP-2024-2025\\Builder-design-implementation\\Resources\\generated-images\\" + buildVehicle().getVehicleID() + ".png";
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        Vehicle vehicle = buildVehicle();
+                        String prompt = vehicle.getDescription();
 
-                    // Apeleaza metoda pentru a genera imaginea
-                    HuggingFaceClient.generateImage(prompt, outputPath);
-                    statusLabel.setText("Vehicle Generated"); // Actualizeaza statusul
-                    viewMotorcycleImageButton.setEnabled(true); // Activeaza butonul pentru vizualizarea imaginii
+                        try {
+                            String outputPath = laptopPath + "\\" + vehicle.getVehicleID() + ".png";
+                            HuggingFaceClient.generateImage(prompt, outputPath);
+                            System.out.println("Image generated and saved successfully at " + outputPath);
 
-                    // Adauga un listener pentru a vizualiza imaginea generata
-                    viewMotorcycleImageButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            JFrame imageFrame = new JFrame("Generated image");
-                            imageFrame.setSize(1080, 860);
-                            imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            SwingUtilities.invokeLater(() -> {
+                                viewMotorcycleImageButton.setEnabled(true); // Activeza butonul dupa generare
+                                viewMotorcycleImageButton.addActionListener(ev -> {
+                                    JFrame imageFrame = new JFrame("Generated image");
+                                    imageFrame.setSize(1080, 860);
+                                    imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                            ImageIcon imageIcon = new ImageIcon(outputPath);
-                            JLabel imageLabel = new JLabel(imageIcon);
-                            imageFrame.add(imageLabel);
+                                    ImageIcon imageIcon = new ImageIcon(outputPath);
+                                    JLabel imageLabel = new JLabel(imageIcon);
+                                    imageFrame.add(imageLabel);
 
-                            imageFrame.setVisible(true); // Deschide fereastra cu imaginea
+                                    imageFrame.setVisible(true);
+                                });
+                            });
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                                    null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE
+                            ));
                         }
-                    });
+                        return null;
+                    }
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "An error occurred while generating the image. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                    @Override
+                    protected void done() {
+                        statusLabel.setText("Vehicle generated.");
+                    }
+                };
+
+                worker.execute(); // Pornește worker-ul
             }
         });
 
@@ -584,9 +653,11 @@ public class BuilderDesign extends JFrame {
     Vehicle buildVehicle() {
         // Se preia numele vehiculului din campul text
         String vehicleName = vehicleNameField.getText();
+        System.out.println(vehicleName);
 
         // Se preia tipul vehiculului selectat din meniu
         String vehicleType = Objects.requireNonNull(vehicleTypeMenu.getSelectedItem().toString());
+        System.out.println(vehicleType);
 
         // Se preia tipul , numele si culoarea
         String frameType = Objects.requireNonNull(carFrameTypeMenu.getSelectedItem()).toString();
@@ -598,6 +669,7 @@ public class BuilderDesign extends JFrame {
 
         // Se preia numarul de usi din campul text
         int doorNumber = Integer.parseInt(carDoorNumberField.getText());
+
 
         // Se preia tipul motorului, tipul de combustibil, puterea si cuplul
         String engineType = carEngineTypeField.getText();
@@ -627,6 +699,7 @@ public class BuilderDesign extends JFrame {
                 .setDoorNumber(doorNumber)
                 .build();
         builder.addComponent(frame);
+        System.out.println(frame.getDescription());
 
         // Se creeaza motorul vehiculului si se adauga la builder
         Engine engine = new Engine.Builder()
@@ -636,6 +709,7 @@ public class BuilderDesign extends JFrame {
                 .setTorque(torque)
                 .build();
         builder.addComponent(engine);
+        System.out.println(engine.getDescription());
 
         // Se creeaza componenta personalizata si se adauga la builder
         CustomComponent customComponent = new CustomComponent("custom", customComponentDescription);
