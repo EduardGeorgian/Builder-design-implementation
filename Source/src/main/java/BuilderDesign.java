@@ -55,7 +55,7 @@ public class BuilderDesign extends JFrame {
     // Constructorul clasei BuilderDesign, care configureaza interfata utilizatorului
     public BuilderDesign() {
         // Calea catre directorul care contine imaginile generate
-        String imageDirectoryPath = laptopPath;
+        String imageDirectoryPath = pcPath;
 
         // Crearea unui model de lista pentru imagini
         DefaultListModel<String> imageListModel = new DefaultListModel<>();
@@ -444,9 +444,10 @@ public class BuilderDesign extends JFrame {
                     protected Void doInBackground() throws Exception {
                         Vehicle vehicle = buildVehicle();
                         String prompt = vehicle.getDescription();
+                        System.out.println(vehicle.getDescription());
 
                         try {
-                            String outputPath = laptopPath + "\\" + vehicle.getVehicleID() + ".png";
+                            String outputPath = pcPath + "\\" + vehicle.getVehicleID() + ".png";
                             HuggingFaceClient.generateImage(prompt, outputPath);
                             System.out.println("Image generated and saved successfully at " + outputPath);
 
@@ -462,6 +463,7 @@ public class BuilderDesign extends JFrame {
                                     imageFrame.add(imageLabel);
 
                                     imageFrame.setVisible(true);
+                                    buildButton.setEnabled(true);
                                 });
                             });
                         } catch (Exception ex) {
@@ -478,7 +480,7 @@ public class BuilderDesign extends JFrame {
                         statusLabel.setText("Vehicle generated.");
                     }
                 };
-
+                buildButton.setEnabled(false);
                 worker.execute(); // Pornește worker-ul
             }
         });
@@ -606,9 +608,10 @@ public class BuilderDesign extends JFrame {
                     protected Void doInBackground() throws Exception {
                         Vehicle vehicle = buildVehicle();
                         String prompt = vehicle.getDescription();
+                        System.out.println(vehicle.getDescription());
 
                         try {
-                            String outputPath = laptopPath + "\\" + vehicle.getVehicleID() + ".png";
+                            String outputPath = pcPath + "\\" + vehicle.getVehicleID() + ".png";
                             HuggingFaceClient.generateImage(prompt, outputPath);
                             System.out.println("Image generated and saved successfully at " + outputPath);
 
@@ -624,6 +627,7 @@ public class BuilderDesign extends JFrame {
                                     imageFrame.add(imageLabel);
 
                                     imageFrame.setVisible(true);
+                                    buildButton.setEnabled(true);
                                 });
                             });
                         } catch (Exception ex) {
@@ -640,7 +644,7 @@ public class BuilderDesign extends JFrame {
                         statusLabel.setText("Vehicle generated.");
                     }
                 };
-
+                buildButton.setEnabled(false);
                 worker.execute(); // Pornește worker-ul
             }
         });
